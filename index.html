@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Web Media Diagnostics &amp; Bitrate Workbench — Open-Source Media Engineering Tools</title>
+  <meta name="description" content="Open-source client-side media diagnostics: inspect image, video, and PDF metadata locally, estimate Core Web Vitals LCP budgets, calculate video bitrates with FFmpeg CLI generation, and explore 2026 codec benchmarks." />
+  <meta property="og:title" content="Web Media Diagnostics &amp; Bitrate Workbench" />
+  <meta property="og:description" content="Local browser-based file inspector, LCP codec estimator, FFmpeg bitrate calculator, and aspect ratio scaler for web engineers." />
+  <meta property="og:type" content="website" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- Top Navigation -->
+  <header class="site-header">
+    <div class="container nav-inner">
+      <a href="index.html" class="brand">
+        <span class="brand-icon">M</span>
+        <span>Web Media Atlas</span>
+        <span class="brand-badge">Open Source</span>
+      </a>
+      <nav aria-label="Primary Navigation">
+        <ul class="nav-links">
+          <li><a href="index.html" class="active">Workbench</a></li>
+          <li><a href="#calculators">LCP &amp; FFmpeg Math</a></li>
+          <li><a href="benchmarks.html">Codec Benchmarks</a></li>
+          <li><a href="cheatsheet.html">Size Cheat Sheet</a></li>
+          <li><a href="#ecosystem">Ecosystem</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero-pill">
+        <span>⚡ Zero-Dependency Open-Source Browser Diagnostics</span>
+      </div>
+      <h1>
+        <span class="gradient-text">Web Media Diagnostics,</span><br />
+        LCP Calculators &amp; FFmpeg Bitrate Math
+      </h1>
+      <p>
+        Inspect local image, video, and PDF geometry without uploading files anywhere, estimate Core Web Vitals (LCP) payload budgets across AVIF/WebP/JPEG, and generate exact <code>cwebp</code>, <code>avifenc</code>, and <code>ffmpeg</code> CLI commands in your browser.
+      </p>
+      <div class="hero-actions">
+        <a href="#workbench" class="btn btn-primary">Inspect a Local File ↓</a>
+        <a href="#calculators" class="btn btn-outline">LCP &amp; FFmpeg Calculators</a>
+        <a href="benchmarks.html" class="btn btn-outline">2026 Codec Benchmarks →</a>
+      </div>
+
+      <div class="stats-bar">
+        <div class="stat-card">
+          <div class="stat-value">100% Local</div>
+          <div class="stat-label">Runs via native Browser File &amp; Media APIs with zero network uploads</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">Q78–Q82</div>
+          <div class="stat-label">Empirical perceptual quality sweet spot for WebP &amp; MozJPEG</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">-86% Size</div>
+          <div class="stat-label">Typical payload savings replacing animated GIF with MP4/WebM</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">CLI + Web</div>
+          <div class="stat-label">Copyable <code>ffmpeg</code>, <code>cwebp</code> &amp; <code>avifenc</code> flags generated live</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Tool 1: Local Media Inspector -->
+  <section id="workbench" class="section">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-eyebrow">Tool 01 · Client-Side Browser File API</div>
+        <h2 class="section-title">Local File Metadata Inspector &amp; Upload Limit Checker</h2>
+        <p class="section-desc">
+          Drop any image, video, or PDF below (or load a sample profile) to inspect byte weight, pixel dimensions, aspect ratio, and bits-per-pixel (BPP) density against common web, Discord, ATS resume, and government portal upload caps.
+        </p>
+      </div>
+
+      <div class="workbench-grid">
+        <div class="panel">
+          <div class="panel-title">
+            <span>1. Drop or Select Media File</span>
+            <span class="badge badge-info">Zero Network Calls</span>
+          </div>
+          <div id="file-dropzone" class="dropzone" role="button" tabindex="0" aria-label="Drop file to inspect locally">
+            <div class="dropzone-icon">📂</div>
+            <h3>Drag &amp; Drop Image, Video, or PDF</h3>
+            <p>Click to browse locally. Metadata is read directly from browser memory.</p>
+            <input type="file" id="file-input" style="display:none" accept="image/*,video/*,application/pdf,.heic,.heif,.avif,.webp,.mkv" />
+            <div class="sample-btns">
+              <button type="button" id="sample-photo" class="btn btn-outline btn-sm">Sample: 3.8MB HEIC</button>
+              <button type="button" id="sample-discord" class="btn btn-outline btn-sm">Sample: 41MB MP4</button>
+              <button type="button" id="sample-resume" class="btn btn-outline btn-sm">Sample: 2.7MB PDF</button>
+              <button type="button" id="sample-passport" class="btn btn-outline btn-sm">Sample: 305KB Photo</button>
+            </div>
+          </div>
+
+          <div class="kv-grid">
+            <div class="kv-item">
+              <div class="kv-label">File Name</div>
+              <div class="kv-val" id="insp-name">—</div>
+            </div>
+            <div class="kv-item">
+              <div class="kv-label">Exact Byte Size</div>
+              <div class="kv-val" id="insp-size">—</div>
+            </div>
+            <div class="kv-item">
+              <div class="kv-label">MIME / Container</div>
+              <div class="kv-val" id="insp-mime">—</div>
+            </div>
+            <div class="kv-item">
+              <div class="kv-label">Dimensions / Pages</div>
+              <div class="kv-val" id="insp-dim">—</div>
+            </div>
+            <div class="kv-item">
+              <div class="kv-label">Aspect Ratio / Duration</div>
+              <div class="kv-val" id="insp-ratio">—</div>
+            </div>
+            <div class="kv-item">
+              <div class="kv-label">Encoding Density</div>
+              <div class="kv-val" id="insp-bpp">—</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-title">
+            <span>2. Upload Cap Compliance Audit</span>
+            <a href="cheatsheet.html" style="font-size:0.82rem;">Full Size Reference →</a>
+          </div>
+          <p style="font-size:0.86rem;color:var(--text-secondary);margin-bottom:0.75rem;">
+            Evaluates your file against common web performance budgets and strict platform limits. To compress oversized files locally without CLI tools, you can use browser-based WebAssembly apps such as <a href="https://squoosh.app/" target="_blank" rel="noopener">Squoosh</a> (single images) or <a href="https://vexelloom.com/" target="_blank" rel="noopener">Vexelloom</a> (batch images, video, and PDF).
+          </p>
+          <div id="compliance-results" class="compliance-list"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Tool 2 & 3: LCP Codec Simulator & FFmpeg Bitrate Calculator -->
+  <section id="calculators" class="section">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-eyebrow">Tool 02 &amp; 03 · Performance &amp; Encoding Math</div>
+        <h2 class="section-title">Core Web Vitals (LCP) Estimator &amp; FFmpeg Bitrate Generator</h2>
+        <p class="section-desc">
+          Estimate output file size and mobile <a href="https://web.dev/articles/lcp" target="_blank" rel="noopener">Largest Contentful Paint (LCP)</a> impact across image codecs, or compute exact video bitrates and copy a ready-to-run <a href="https://ffmpeg.org/documentation.html" target="_blank" rel="noopener">FFmpeg</a> command.
+        </p>
+      </div>
+
+      <div class="workbench-grid">
+        <!-- Codec & LCP Calculator -->
+        <div class="panel">
+          <div class="panel-title">
+            <span>Image Codec Weight &amp; CLI Generator</span>
+            <a href="benchmarks.html" style="font-size:0.8rem;">Codec Benchmarks →</a>
+          </div>
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="calc-width">Width (px)</label>
+              <input type="number" id="calc-width" class="form-control" value="1920" min="16" max="16384" />
+            </div>
+            <div class="form-group">
+              <label for="calc-height">Height (px)</label>
+              <input type="number" id="calc-height" class="form-control" value="1080" min="16" max="16384" />
+            </div>
+            <div class="form-group">
+              <label for="calc-codec">Output Codec</label>
+              <select id="calc-codec" class="form-control">
+                <option value="webp" selected>WebP (VP8 Intra)</option>
+                <option value="avif">AVIF (AV1 10-Bit)</option>
+                <option value="jpeg">MozJPEG (4:2:0 DCT)</option>
+                <option value="png">PNG-24 (Lossless Alpha)</option>
+                <option value="bmp">Uncompressed BMP</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="calc-quality">Quality: <strong id="calc-quality-val">Q80</strong></label>
+              <input type="range" id="calc-quality" min="40" max="100" value="80" />
+            </div>
+          </div>
+
+          <div class="kv-grid">
+            <div class="kv-item">
+              <div class="kv-label">Estimated Weight</div>
+              <div class="kv-val" id="out-est-size">—</div>
+            </div>
+            <div class="kv-item">
+              <div class="kv-label">Savings vs Raw</div>
+              <div class="kv-val" id="out-est-savings" style="color:var(--emerald)">—</div>
+            </div>
+            <div class="kv-item">
+              <div class="kv-label">Estimated Hero LCP</div>
+              <div class="kv-val" id="out-est-lcp">—</div>
+            </div>
+            <div class="kv-item">
+              <div class="kv-label">Mean SSIM Fidelity</div>
+              <div class="kv-val" id="out-est-ssim">—</div>
+            </div>
+          </div>
+
+          <div class="code-box">
+            <code id="out-img-cli">cwebp -q 80 -resize 1920 1080 input.png -o output.webp</code>
+            <button type="button" class="btn btn-outline btn-sm" data-copy-target="out-img-cli">Copy</button>
+          </div>
+        </div>
+
+        <!-- Video Bitrate & FFmpeg Command Generator -->
+        <div class="panel">
+          <div class="panel-title">
+            <span>Video Target Bitrate &amp; FFmpeg Generator</span>
+            <span class="badge badge-info">6% Mux Buffer</span>
+          </div>
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="vid-duration">Duration (Seconds)</label>
+              <input type="number" id="vid-duration" class="form-control" value="35" min="1" max="3600" />
+            </div>
+            <div class="form-group">
+              <label for="vid-target-mb">Target File Cap</label>
+              <select id="vid-target-mb" class="form-control">
+                <option value="8" selected>8 MB (Discord Classic)</option>
+                <option value="10">10 MB (Discord / GitHub Issue)</option>
+                <option value="16">16 MB (WhatsApp)</option>
+                <option value="25">25 MB (Email / Discord Boost)</option>
+                <option value="50">50 MB (Discord Nitro Basic)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="vid-audio-kbps">Audio Bitrate</label>
+              <select id="vid-audio-kbps" class="form-control">
+                <option value="96">96 kbps (Voice)</option>
+                <option value="128" selected>128 kbps (Standard AAC)</option>
+                <option value="192">192 kbps (High Fidelity)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="kv-grid">
+            <div class="kv-item">
+              <div class="kv-label">Max Safe Video Bitrate</div>
+              <div class="kv-val" id="out-vid-kbps" style="color:var(--cyan)">—</div>
+            </div>
+            <div class="kv-item">
+              <div class="kv-label">Recommended Resolution</div>
+              <div class="kv-val" id="out-vid-res">—</div>
+            </div>
+          </div>
+
+          <div class="code-box">
+            <code id="out-ffmpeg-cli">ffmpeg -i input.mp4 ...</code>
+            <button type="button" class="btn btn-outline btn-sm" data-copy-target="out-ffmpeg-cli">Copy</button>
+          </div>
+
+          <p style="font-size:0.82rem;color:var(--text-secondary);margin-top:0.85rem;">
+            Prefer a zero-install browser workflow instead of local FFmpeg? Try an in-browser WebAssembly <a href="https://vexelloom.com/compress-video" target="_blank" rel="noopener">video compressor</a> or <a href="https://vexelloom.com/compress-video-for-discord" target="_blank" rel="noopener">Discord bitrate preset</a>.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Tool 4: Aspect Ratio & Resolution Scaler -->
+  <section class="section">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-eyebrow">Tool 04 · Geometry Math</div>
+        <h2 class="section-title">Aspect Ratio &amp; Responsive Resolution Scaler</h2>
+        <p class="section-desc">
+          Calculate exact aspect ratios using greatest common divisor (GCD) reduction and compute distortion-free target heights for responsive <code>srcset</code> breakpoints.
+        </p>
+      </div>
+
+      <div class="panel">
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="ar-w1">Source Width (px)</label>
+            <input type="number" id="ar-w1" class="form-control" value="4032" min="1" />
+          </div>
+          <div class="form-group">
+            <label for="ar-h1">Source Height (px)</label>
+            <input type="number" id="ar-h1" class="form-control" value="3024" min="1" />
+          </div>
+          <div class="form-group">
+            <label for="ar-w2">Target Width (px)</label>
+            <input type="number" id="ar-w2" class="form-control" value="1200" min="1" />
+          </div>
+        </div>
+        <div class="kv-grid">
+          <div class="kv-item">
+            <div class="kv-label">Reduced Aspect Ratio</div>
+            <div class="kv-val" id="out-ar-ratio">—</div>
+          </div>
+          <div class="kv-item">
+            <div class="kv-label">Locked Output Dimensions</div>
+            <div class="kv-val" id="out-ar-target" style="color:var(--emerald)">—</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Balanced Open-Web Ecosystem & References -->
+  <section id="ecosystem" class="section">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-eyebrow">Curated Engineering References</div>
+        <h2 class="section-title">CLI &amp; Client-Side Browser Media Ecosystem</h2>
+        <p class="section-desc">
+          Recommended specifications, command-line encoders, and privacy-first browser WebAssembly tools for local media optimization.
+        </p>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Tool / Specification</th>
+              <th>Category</th>
+              <th>Execution Model</th>
+              <th>Best Used For</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong><a href="https://ffmpeg.org/" target="_blank" rel="noopener">FFmpeg</a></strong></td>
+              <td>CLI Video &amp; Audio</td>
+              <td>Native Binary / WASM</td>
+              <td>Scriptable transcoding, bitrate-capped MP4/WebM encoding, and audio extraction</td>
+            </tr>
+            <tr>
+              <td><strong><a href="https://developers.google.com/speed/webp" target="_blank" rel="noopener">libwebp (cwebp)</a> &amp; <a href="https://github.com/AOMediaCodec/libavif" target="_blank" rel="noopener">libavif</a></strong></td>
+              <td>CLI Image Encoders</td>
+              <td>Native C/C++</td>
+              <td>CI/CD build pipelines generating responsive WebP and AVIF assets</td>
+            </tr>
+            <tr>
+              <td><strong><a href="https://squoosh.app/" target="_blank" rel="noopener">Squoosh</a></strong></td>
+              <td>Browser Image Tool</td>
+              <td>Client-Side WASM</td>
+              <td>Interactive side-by-side single-image codec inspection</td>
+            </tr>
+            <tr>
+              <td><strong><a href="https://vexelloom.com/" target="_blank" rel="noopener">Vexelloom</a></strong></td>
+              <td>Browser Media &amp; PDF Suite</td>
+              <td>Client-Side WASM + ONNX</td>
+              <td>Zero-upload <a href="https://vexelloom.com/image-converter" target="_blank" rel="noopener">batch image conversion</a>, exact KB caps, <a href="https://vexelloom.com/pdf-tools" target="_blank" rel="noopener">PDF compression/OCR</a>, and local AI editing</td>
+            </tr>
+            <tr>
+              <td><strong><a href="https://web.dev/articles/fast#optimize_your_images" target="_blank" rel="noopener">web.dev Image Performance</a></strong></td>
+              <td>Documentation</td>
+              <td>Reference Guide</td>
+              <td>Core Web Vitals (LCP, CLS) best practices and responsive <code>&lt;picture&gt;</code> markup</td>
+            </tr>
+            <tr>
+              <td><strong><a href="https://developer.mozilla.org/en-US/docs/Web/Media/Formats/Image_types" target="_blank" rel="noopener">MDN Web Media Formats</a></strong></td>
+              <td>Documentation</td>
+              <td>Reference Guide</td>
+              <td>MIME types, browser compatibility tables, and HTML5 Canvas / WebCodecs APIs</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- Clean 3-Column Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <h4>Workbench Pages</h4>
+          <ul>
+            <li><a href="index.html">Media Inspector &amp; Calculators</a></li>
+            <li><a href="benchmarks.html">2026 Codec Benchmarks</a></li>
+            <li><a href="cheatsheet.html">Social &amp; Portal Size Cheat Sheet</a></li>
+            <li><a href="llms.txt">llms.txt</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Standards &amp; Docs</h4>
+          <ul>
+            <li><a href="https://web.dev/articles/lcp" target="_blank" rel="noopener">web.dev — Largest Contentful Paint</a></li>
+            <li><a href="https://developer.mozilla.org/en-US/docs/Web/API/File_API" target="_blank" rel="noopener">MDN — Browser File API</a></li>
+            <li><a href="https://caniuse.com/avif" target="_blank" rel="noopener">CanIUse — AVIF Browser Support</a></li>
+            <li><a href="https://ffmpeg.org/documentation.html" target="_blank" rel="noopener">FFmpeg Official Documentation</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Client-Side Companion Tools</h4>
+          <ul>
+            <li><a href="https://squoosh.app/" target="_blank" rel="noopener">Squoosh (Single Image WASM)</a></li>
+            <li><a href="https://vexelloom.com/" target="_blank" rel="noopener">Vexelloom (Batch Image, Video &amp; PDF)</a></li>
+            <li><a href="https://vexelloom.com/guides" target="_blank" rel="noopener">Vexelloom 2026 Codec Guides</a></li>
+            <li><a href="https://imagemagick.org/" target="_blank" rel="noopener">ImageMagick CLI</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div>MIT License · Open-Source Web Media Diagnostics &amp; Bitrate Workbench.</div>
+        <div>Runs 100% client-side with zero tracking or file uploads.</div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

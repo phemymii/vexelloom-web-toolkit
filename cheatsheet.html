@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>2026 Social Media, Discord &amp; Portal Image/Video/PDF Size Cheat Sheet | Web Media Atlas</title>
+  <meta name="description" content="Reference table of 2026 pixel dimensions, aspect ratios, and strict byte caps for Instagram, TikTok, YouTube Shorts, Discord 8MB/25MB, Passport/Visa 20KB-50KB portals, and 1MB ATS Resume PDFs." />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="container nav-inner">
+      <a href="index.html" class="brand">
+        <span class="brand-icon">M</span>
+        <span>Web Media Atlas</span>
+        <span class="brand-badge">Open Source</span>
+      </a>
+      <nav aria-label="Primary Navigation">
+        <ul class="nav-links">
+          <li><a href="index.html">Workbench</a></li>
+          <li><a href="index.html#calculators">LCP &amp; FFmpeg Math</a></li>
+          <li><a href="benchmarks.html">Codec Benchmarks</a></li>
+          <li><a href="cheatsheet.html" class="active">Size Cheat Sheet</a></li>
+          <li><a href="index.html#ecosystem">Ecosystem</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="container">
+      <div class="hero-pill">📐 2026 Dimensions, Aspect Ratios &amp; Upload Caps</div>
+      <h1>
+        <span class="gradient-text">Social Media, Discord &amp; Portal</span><br />
+        Image, Video &amp; PDF Size Cheat Sheet
+      </h1>
+      <p>
+        Quick-reference pixel dimensions, safe aspect ratios, and strict kilobyte/megabyte upload caps for web developers, designers, and applicants. Test your own files locally on the <a href="index.html#workbench">File Inspector Workbench</a>.
+      </p>
+    </div>
+  </section>
+
+  <!-- Government, Exam, Passport & Job Portal Strict Caps -->
+  <section class="section">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-eyebrow">Reference 01 · Strict Upload Portal KB &amp; MB Limits</div>
+        <h2 class="section-title">Government, Passport, Visa, Exam &amp; ATS Resume Specifications</h2>
+        <p class="section-desc">
+          Strict portals reject uploads that exceed exact byte limits. You can target exact sizes with ImageMagick/Ghostscript CLI or browser-based binary-search compressors like <a href="https://vexelloom.com/compress-image" target="_blank" rel="noopener">Vexelloom Image Compressor</a> and <a href="https://vexelloom.com/compress-pdf-under-1mb" target="_blank" rel="noopener">PDF 1MB Compressor</a>.
+        </p>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Application / Portal Type</th>
+              <th>Recommended Dimensions</th>
+              <th>Strict File Size Cap</th>
+              <th>Accepted Format</th>
+              <th>Engineering Notes</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Digital Signature &amp; Thumb Impression</strong></td>
+              <td>140 × 60 px (or 300 × 120 px)</td>
+              <td><span class="badge badge-warn">10 KB – 20 KB</span></td>
+              <td>JPG / JPEG</td>
+              <td>Tightly crop white margins &amp; use grayscale quantization</td>
+            </tr>
+            <tr>
+              <td><strong>Passport, Visa &amp; Exam ID Headshot</strong></td>
+              <td>200 × 230 px or 600 × 600 px (1:1)</td>
+              <td><span class="badge badge-warn">20 KB – 50 KB</span></td>
+              <td>JPG (Plain Backdrop)</td>
+              <td>Strip EXIF metadata &amp; target Q70–Q78 (<a href="https://vexelloom.com/compress-image-to-50kb" target="_blank" rel="noopener">50KB preset</a>)</td>
+            </tr>
+            <tr>
+              <td><strong>E-Commerce Product &amp; Core Web Vitals LCP</strong></td>
+              <td>1080 × 1080 px or 1200 × 900 px</td>
+              <td><span class="badge badge-pass">≤ 100 KB</span></td>
+              <td>WebP / AVIF / JPG</td>
+              <td>Serve via <code>&lt;picture&gt;</code> with <code>fetchpriority="high"</code></td>
+            </tr>
+            <tr>
+              <td><strong>Blog Hero &amp; OpenGraph Social Card</strong></td>
+              <td>1200 × 630 px (1.91:1) or 1920 × 1080 px</td>
+              <td><span class="badge badge-pass">≤ 200 KB</span></td>
+              <td>WebP / JPG</td>
+              <td>Use Q78–Q82 perceptual sweet spot</td>
+            </tr>
+            <tr>
+              <td><strong>ATS Job Resume, CV &amp; Cover Letter PDF</strong></td>
+              <td>A4 (210×297mm) or US Letter</td>
+              <td><span class="badge badge-warn">≤ 1 MB (1,024 KB)</span></td>
+              <td>PDF (Selectable Text)</td>
+              <td>Downsample embedded bitmaps to 150 DPI without rasterizing text</td>
+            </tr>
+            <tr>
+              <td><strong>Visa Packet, Academic Transcript &amp; Tax PDF</strong></td>
+              <td>Multi-page A4 / Letter (150–200 DPI)</td>
+              <td><span class="badge badge-warn">≤ 2 MB (2,048 KB)</span></td>
+              <td>PDF</td>
+              <td>Compress embedded scans before merging pages</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- Social Media & Video Platform Cheat Sheet -->
+  <section class="section">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-eyebrow">Reference 02 · Social Media &amp; Video Platform Specifications</div>
+        <h2 class="section-title">Instagram, TikTok, YouTube, Discord, LinkedIn &amp; X Dimensions (2026)</h2>
+        <p class="section-desc">
+          Standardized framing dimensions for creators and front-end teams. For deeper safe-zone specs, see the <a href="https://vexelloom.com/guides/social-media-image-video-size-cheat-sheet" target="_blank" rel="noopener">2026 Social Media Size Guide</a>.
+        </p>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Platform &amp; Placement</th>
+              <th>Resolution (px)</th>
+              <th>Aspect Ratio</th>
+              <th>Codec / File Cap</th>
+              <th>Optimization Tip</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Instagram Reels / TikTok / YouTube Shorts</strong></td>
+              <td>1080 × 1920 px</td>
+              <td>9:16 Vertical</td>
+              <td>H.264 MP4 + AAC 128–192k</td>
+              <td>Keep captions inside center 80% vertical safe zone</td>
+            </tr>
+            <tr>
+              <td><strong>Instagram Feed Portrait</strong></td>
+              <td>1080 × 1350 px</td>
+              <td>4:5 Portrait</td>
+              <td>sRGB JPG / PNG</td>
+              <td>Maximizes vertical mobile viewport height</td>
+            </tr>
+            <tr>
+              <td><strong>Instagram 3×1 Panorama Carousel</strong></td>
+              <td>3240 × 1080 px (or 3240 × 1350 px)</td>
+              <td>3 × (1:1 or 4:5)</td>
+              <td>3 Seamless Tiles</td>
+              <td>Slice evenly at exact 1080px horizontal intervals</td>
+            </tr>
+            <tr>
+              <td><strong>Discord Free Chat Video &amp; Clip Upload</strong></td>
+              <td>1920 × 1080 px or 1280 × 720 px</td>
+              <td>16:9 / Custom</td>
+              <td><span class="badge badge-warn">8 MB / 10 MB / 25 MB</span></td>
+              <td>Use the <a href="index.html#calculators">FFmpeg Bitrate Calculator</a> with a 6% mux buffer</td>
+            </tr>
+            <tr>
+              <td><strong>YouTube Thumbnail &amp; 16:9 Hero</strong></td>
+              <td>1280 × 720 px (or 1920 × 1080 px)</td>
+              <td>16:9 Widescreen</td>
+              <td>≤ 2 MB JPG / PNG</td>
+              <td>Export in sRGB color profile to prevent gamma shifts</td>
+            </tr>
+            <tr>
+              <td><strong>Website Favicon &amp; PWA Manifest Icons</strong></td>
+              <td>16×16, 32×32, 180×180, 192×192, 512×512</td>
+              <td>1:1 Square</td>
+              <td>ICO + PNG + SVG</td>
+              <td>Include <code>apple-touch-icon</code> and <code>site.webmanifest</code></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-bottom">
+        <div>MIT License · Open-Source Web Media Diagnostics &amp; Size Reference.</div>
+        <div>
+          <a href="index.html">Workbench</a> ·
+          <a href="benchmarks.html">Codec Benchmarks</a> ·
+          <a href="llms.txt">llms.txt</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

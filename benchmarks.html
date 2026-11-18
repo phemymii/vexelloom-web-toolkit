@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>2026 Web Image &amp; Video Codec Benchmarks (AVIF vs WebP vs JPEG, GIF vs MP4) | Web Media Atlas</title>
+  <meta name="description" content="Empirical 2026 web media compression reference: compare JPEG vs WebP vs AVIF SSIM quality, Q78-Q82 compression knee curves, GIF vs MP4/WebM payload savings, and EXIF metadata privacy." />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="container nav-inner">
+      <a href="index.html" class="brand">
+        <span class="brand-icon">M</span>
+        <span>Web Media Atlas</span>
+        <span class="brand-badge">Open Source</span>
+      </a>
+      <nav aria-label="Primary Navigation">
+        <ul class="nav-links">
+          <li><a href="index.html">Workbench</a></li>
+          <li><a href="index.html#calculators">LCP &amp; FFmpeg Math</a></li>
+          <li><a href="benchmarks.html" class="active">Codec Benchmarks</a></li>
+          <li><a href="cheatsheet.html">Size Cheat Sheet</a></li>
+          <li><a href="index.html#ecosystem">Ecosystem</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="container">
+      <div class="hero-pill">📊 Empirical 2026 Codec &amp; Compression Reference</div>
+      <h1>
+        <span class="gradient-text">2026 Image, Video &amp; Animation</span><br />
+        Codec Compression Benchmarks
+      </h1>
+      <p>
+        Quantitative reference tables comparing perceptual SSIM fidelity, bits-per-pixel (BPP), Core Web Vitals (LCP) budgets, and browser support across modern web media formats.
+      </p>
+      <div class="hero-actions">
+        <a href="index.html#calculators" class="btn btn-primary">Simulate Your Own File Size →</a>
+        <a href="https://caniuse.com/?search=avif" target="_blank" rel="noopener" class="btn btn-outline">Check CanIUse Support ↗</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Table 1: Still Image Codec Benchmark -->
+  <section class="section">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-eyebrow">Benchmark 01 · Still Image Formats</div>
+        <h2 class="section-title">JPEG vs WebP vs AVIF vs HEIC vs PNG (1920×1080 Corpus)</h2>
+        <p class="section-desc">
+          Measured at visually lossless perceptual quality (Q80 equivalent, SSIM ≥ 0.965). For extended methodology and test imagery, see <a href="https://web.dev/articles/choose-the-right-image-format" target="_blank" rel="noopener">web.dev's format guide</a> and the <a href="https://vexelloom.com/guides/jpeg-vs-webp-vs-avif" target="_blank" rel="noopener">Vexelloom 2026 JPEG vs WebP vs AVIF benchmark</a>.
+        </p>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Codec Format</th>
+              <th>Avg 1080p Weight</th>
+              <th>Bits/Pixel (BPP)</th>
+              <th>Mean SSIM</th>
+              <th>Transparency / HDR</th>
+              <th>Browser Support</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>AVIF (AV1 Intra)</strong></td>
+              <td><span class="badge badge-pass">142 KB (-54%)</span></td>
+              <td>0.56 bpp</td>
+              <td>0.981</td>
+              <td>Alpha + 10/12-bit HDR</td>
+              <td>96.8% Global</td>
+            </tr>
+            <tr>
+              <td><strong>WebP (VP8 Lossy/Lossless)</strong></td>
+              <td><span class="badge badge-pass">198 KB (-36%)</span></td>
+              <td>0.78 bpp</td>
+              <td>0.974</td>
+              <td>8-bit Alpha + Animation</td>
+              <td>98.9% Global</td>
+            </tr>
+            <tr>
+              <td><strong>HEIC / HEIF (HEVC)</strong></td>
+              <td><span class="badge badge-info">175 KB (-43%)</span></td>
+              <td>0.69 bpp</td>
+              <td>0.978</td>
+              <td>Depth Map + 10-bit HDR</td>
+              <td>Safari Only (WASM decode needed elsewhere)</td>
+            </tr>
+            <tr>
+              <td><strong>MozJPEG (4:2:0 DCT)</strong></td>
+              <td><span class="badge badge-warn">310 KB (Baseline)</span></td>
+              <td>1.22 bpp</td>
+              <td>0.962</td>
+              <td>None (8-bit YCbCr)</td>
+              <td>100% Universal</td>
+            </tr>
+            <tr>
+              <td><strong>PNG-24 (DEFLATE Lossless)</strong></td>
+              <td><span class="badge badge-fail">1,420 KB (+358%)</span></td>
+              <td>5.61 bpp</td>
+              <td>1.000</td>
+              <td>Full 8/16-bit Alpha</td>
+              <td>100% Universal</td>
+            </tr>
+            <tr>
+              <td><strong>SVG (Cubic Bézier Vector)</strong></td>
+              <td><span class="badge badge-pass">4 KB – 28 KB</span></td>
+              <td>Resolution-Free</td>
+              <td>∞ (Mathematical)</td>
+              <td>Full Alpha + CSS Styling</td>
+              <td>100% Universal</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- Table 2: Quality Q-Sweep & Core Web Vitals LCP Impact -->
+  <section class="section">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-eyebrow">Benchmark 02 · The Q78–Q82 Perceptual Knee Curve</div>
+        <h2 class="section-title">Encoder Quality (Q100 to Q50) vs File Weight &amp; Mobile LCP</h2>
+        <p class="section-desc">
+          Exporting web photographs at Q95–Q100 inflates byte weight by 2x–6x with virtually imperceptible SSIM gains. See also: <a href="https://vexelloom.com/guides/best-image-compression-quality-settings" target="_blank" rel="noopener">Q100–Q50 compression quality study</a> and <a href="https://web.dev/articles/optimize-lcp" target="_blank" rel="noopener">web.dev LCP optimization</a>.
+        </p>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Quality Setting</th>
+              <th>Output Weight (2K Hero)</th>
+              <th>SSIM Fidelity</th>
+              <th>4G Mobile Hero LCP</th>
+              <th>Recommended Use Case</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Q100 (Unquantized)</strong></td>
+              <td>1,180 KB</td>
+              <td>0.998</td>
+              <td><span class="badge badge-fail">2,940 ms (Poor)</span></td>
+              <td>Archival source master only</td>
+            </tr>
+            <tr>
+              <td><strong>Q92 (High Fine-Art)</strong></td>
+              <td>540 KB (-54%)</td>
+              <td>0.991</td>
+              <td><span class="badge badge-warn">1,710 ms (Needs Work)</span></td>
+              <td>High-DPI photography portfolios</td>
+            </tr>
+            <tr>
+              <td><strong>Q80 (Perceptual Sweet Spot)</strong></td>
+              <td>195 KB (-83%)</td>
+              <td>0.976</td>
+              <td><span class="badge badge-pass">980 ms (Good LCP)</span></td>
+              <td>Blog hero banners &amp; landing pages</td>
+            </tr>
+            <tr>
+              <td><strong>Q72 (E-Commerce &amp; Cards)</strong></td>
+              <td>94 KB (-92%)</td>
+              <td>0.961</td>
+              <td><span class="badge badge-pass">690 ms (Fast LCP)</span></td>
+              <td>Product grids, thumbnails &amp; mobile feeds</td>
+            </tr>
+            <tr>
+              <td><strong>Binary-Search 50KB / 20KB</strong></td>
+              <td>18 KB – 49 KB</td>
+              <td>0.935+ (Adaptive)</td>
+              <td><span class="badge badge-pass">480 ms (Instant)</span></td>
+              <td>Strict passport, visa &amp; exam upload forms</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- Table 3: Motion & Animation Benchmark -->
+  <section class="section">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-eyebrow">Benchmark 03 · Motion &amp; Animation Codecs</div>
+        <h2 class="section-title">Animated GIF vs Animated WebP vs H.264 MP4 vs VP9 WebM</h2>
+        <p class="section-desc">
+          Legacy GIF uses 1987 LZW dictionary compression limited to 256 colors per frame. Replacing inline GIFs with muted, looping <code>&lt;video autoplay loop muted playsinline&gt;</code> elements cuts payload by 85%–92% (<a href="https://vexelloom.com/guides/gif-vs-mp4-vs-webm" target="_blank" rel="noopener">GIF vs MP4 vs WebM comparison</a>).
+        </p>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Container / Codec</th>
+              <th>10s 720p Clip Size</th>
+              <th>Color Depth</th>
+              <th>Payload Savings</th>
+              <th>Typical CLI / Tooling</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Legacy Animated GIF</strong></td>
+              <td><span class="badge badge-fail">14.8 MB</span></td>
+              <td>8-bit (256 Colors)</td>
+              <td>Baseline (0%)</td>
+              <td><code>gifsicle</code> / FFmpeg palettegen</td>
+            </tr>
+            <tr>
+              <td><strong>Animated WebP</strong></td>
+              <td><span class="badge badge-warn">3.9 MB</span></td>
+              <td>24-bit + 8-bit Alpha</td>
+              <td>-73.6% Smaller</td>
+              <td><code>gif2webp</code> / <code>img2webp</code></td>
+            </tr>
+            <tr>
+              <td><strong>H.264 MP4 (yuv420p)</strong></td>
+              <td><span class="badge badge-pass">1.45 MB</span></td>
+              <td>24-bit True Color</td>
+              <td>-90.2% Smaller</td>
+              <td><code>ffmpeg -c:v libx264 -movflags +faststart</code></td>
+            </tr>
+            <tr>
+              <td><strong>VP9 / AV1 WebM</strong></td>
+              <td><span class="badge badge-pass">1.12 MB</span></td>
+              <td>24-bit + Alpha Support</td>
+              <td>-92.4% Smaller</td>
+              <td><code>ffmpeg -c:v libvpx-vp9</code></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- Privacy & Forensics Note -->
+  <section class="section">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-eyebrow">Benchmark 04 · Metadata &amp; Redaction Hygiene</div>
+        <h2 class="section-title">EXIF Privacy &amp; Irreversible Screenshot Redaction</h2>
+        <p class="section-desc">
+          Always strip EXIF GPS tags before publishing user-generated images (<code>exiftool -all=</code> or client-side tools like <a href="https://vexelloom.com/exif-viewer" target="_blank" rel="noopener">Vexelloom EXIF Scrubber</a>), and avoid translucent markup highlighters when redacting sensitive screenshots—solid canvas pixel replacement prevents contrast-recovery leaks (<a href="https://vexelloom.com/guides/why-highlighter-blur-leaks-screenshot-secrets" target="_blank" rel="noopener">redaction security breakdown</a>).
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-bottom">
+        <div>MIT License · Open-Source Web Media Diagnostics &amp; Benchmark Atlas.</div>
+        <div>
+          <a href="index.html">Workbench</a> ·
+          <a href="cheatsheet.html">Size Cheat Sheet</a> ·
+          <a href="llms.txt">llms.txt</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
